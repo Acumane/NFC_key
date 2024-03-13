@@ -1,27 +1,18 @@
 #include <SoftwareSerial.h>
-#include <LiquidCrystal_I2C.h>
-#include <Adafruit_PN532.h>
 #include <PN532_SWHSU.h>
 #include <PN532.h>
-
 SoftwareSerial SWSerial( 3, 2 ); // RX, TX
-LiquidCrystal_I2C lcd(0x27, 16, 2); // I2C address 0x27, 20 column and 4 rows
+ 
 PN532_SWHSU pn532swhsu( SWSerial );
 PN532 nfc( pn532swhsu );
 String tagId = "None", dispTag = "None";
 byte nuidPICC[4];
-
-void setup() {
+ 
+void setup(void)
+{
   Serial.begin(115200);
   Serial.println("Hello Maker!");
-  lcd.init(); // initialize the lcd
-  lcd.backlight();
-
-  lcd.setCursor(0, 0);            // move cursor the first row
-  lcd.print("Hello, Bren.");          // print message at the first row
-  lcd.setCursor(0, 1);            // move cursor to the second row
-  lcd.print("How are you?"); // print message at the second row
-
+  //  Serial2.begin(115200, SERIAL_8N1, RXD2, TXD2);
   nfc.begin();
   uint32_t versiondata = nfc.getFirmwareVersion();
   if (! versiondata)
@@ -29,13 +20,25 @@ void setup() {
     Serial.print("Didn't Find PN53x Module");
     while (1); // Halt
   }
+  // Got valid data, print it out!
+  Serial.print("Found chip PN5");
+  Serial.println((versiondata >> 24) & 0xFF, HEX);
+  Serial.print("Firmware ver. ");
+  Serial.print((versiondata >> 16) & 0xFF, DEC);
+  Serial.print('.'); 
+  Serial.println((versiondata >> 8) & 0xFF, DEC);
+  // Configure board to read RFID tags
+  nfc.SAMConfig();
+  //Serial.println("Waiting for an ISO14443A Card ...");
 }
-
-void loop() {
-  // put your main code here, to run repeatedly:
+ 
+ 
+void loop()
+{
   readNFC();
 }
-
+ 
+ 
 void readNFC()
 {
   boolean success;
