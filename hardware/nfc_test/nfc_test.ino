@@ -1,12 +1,14 @@
 #include <SoftwareSerial.h>
 #include <PN532_SWHSU.h>
 #include <PN532.h>
+#include <LiquidCrystal_I2C.h>
 SoftwareSerial SWSerial( 3, 2 ); // RX, TX
  
 PN532_SWHSU pn532swhsu( SWSerial );
 PN532 nfc( pn532swhsu );
 String tagId = "None", dispTag = "None";
 byte nuidPICC[4];
+LiquidCrystal_I2C lcd(0x27, 16, 2);
  
 void setup(void)
 {
@@ -30,6 +32,8 @@ void setup(void)
   // Configure board to read RFID tags
   nfc.SAMConfig();
   //Serial.println("Waiting for an ISO14443A Card ...");
+  lcd.init(); // initialize the lcd
+  lcd.backlight();
 }
  
  
@@ -59,15 +63,28 @@ void readNFC()
     Serial.println();
     tagId = tagToString(nuidPICC);
     dispTag = tagId;
+
     Serial.print(F("tagId is : "));
     Serial.println(tagId);
     Serial.println("");
+    lcd.setCursor(0, 0);            // move cursor the first row
+    lcd.print("UUID found:");          // print message at the first row
+    lcd.setCursor(0, 1); 
+    lcd.print(uid[0]); 
+    lcd.setCursor(4, 1); 
+    lcd.print(uid[1]); 
+    lcd.setCursor(8, 1); 
+    lcd.print(uid[2]); 
+    lcd.setCursor(12, 1); 
+    lcd.print(uid[3]); 
+
     delay(1000);  // 1 second halt
   }
   else
   {
     // PN532 probably timed out waiting for a card
     Serial.println("Timed out! Waiting for a card...");
+    lcd.clear();
   }
 }
 String tagToString(byte id[4])
