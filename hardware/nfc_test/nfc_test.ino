@@ -48,6 +48,7 @@ void readNFC()
   boolean success;
   uint8_t uid[] = { 0, 0, 0, 0, 0, 0, 0 };  // Buffer to store the returned UID
   uint8_t uidLength;                       // Length of the UID (4 or 7 bytes depending on ISO14443A card type)
+
   success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, &uid[0], &uidLength);
   if (success)
   {
@@ -79,6 +80,8 @@ void readNFC()
     lcd.print(uid[3]); 
 
     delay(1000);  // 1 second halt
+
+    
   }
   else
   {
