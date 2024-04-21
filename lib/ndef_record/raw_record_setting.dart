@@ -13,7 +13,7 @@ class NDEFRecordSetting extends StatefulWidget {
 }
 
 class _NDEFRecordSetting extends State<NDEFRecordSetting> {
-  GlobalKey _formKey = new GlobalKey<FormState>();
+  final GlobalKey _formKey = new GlobalKey<FormState>();
   late TextEditingController _identifierController;
   late TextEditingController _payloadController;
   late TextEditingController _typeController;
@@ -25,14 +25,14 @@ class _NDEFRecordSetting extends State<NDEFRecordSetting> {
 
     if (widget.record.id == null) {
       _identifierController =
-          new TextEditingController.fromValue(TextEditingValue(text: ""));
+          new TextEditingController.fromValue(const TextEditingValue(text: ""));
     } else {
       _identifierController = new TextEditingController.fromValue(
           TextEditingValue(text: widget.record.id!.toHexString()));
     }
     if (widget.record.payload == null) {
       _payloadController =
-          new TextEditingController.fromValue(TextEditingValue(text: ""));
+          new TextEditingController.fromValue(const TextEditingValue(text: ""));
     } else {
       _payloadController = new TextEditingController.fromValue(
           TextEditingValue(text: widget.record.payload!.toHexString()));
@@ -41,7 +41,7 @@ class _NDEFRecordSetting extends State<NDEFRecordSetting> {
         widget.record.decodedType == null) {
       // bug in ndef package (fixed in newest version)
       _typeController =
-          new TextEditingController.fromValue(TextEditingValue(text: ""));
+          new TextEditingController.fromValue(const TextEditingValue(text: ""));
     } else {
       _typeController = new TextEditingController.fromValue(
           TextEditingValue(text: widget.record.type!.toHexString()));
@@ -54,7 +54,7 @@ class _NDEFRecordSetting extends State<NDEFRecordSetting> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: Text('Set Record'),
+              title: const Text('Set Record'),
             ),
             body: Center(
                 child: Padding(
@@ -68,27 +68,27 @@ class _NDEFRecordSetting extends State<NDEFRecordSetting> {
                             DropdownButton(
                               value: _dropButtonValue,
                               items: [
-                                DropdownMenuItem(
+                                const DropdownMenuItem(
                                   child: Text('empty'),
                                   value: 0,
                                 ),
-                                DropdownMenuItem(
+                                const DropdownMenuItem(
                                   child: Text('nfcWellKnown'),
                                   value: 1,
                                 ),
-                                DropdownMenuItem(
+                                const DropdownMenuItem(
                                   child: Text('media'),
                                   value: 2,
                                 ),
-                                DropdownMenuItem(
+                                const DropdownMenuItem(
                                   child: Text('absoluteURI'),
                                   value: 3,
                                 ),
-                                DropdownMenuItem(
+                                const DropdownMenuItem(
                                     child: Text('nfcExternal'), value: 4),
-                                DropdownMenuItem(
+                                const DropdownMenuItem(
                                     child: Text('unchanged'), value: 5),
-                                DropdownMenuItem(
+                                const DropdownMenuItem(
                                   child: Text('unknown'),
                                   value: 6,
                                 ),
@@ -101,7 +101,7 @@ class _NDEFRecordSetting extends State<NDEFRecordSetting> {
                             ),
                             TextFormField(
                               decoration:
-                                  InputDecoration(labelText: 'identifier'),
+                                  const InputDecoration(labelText: 'identifier'),
                               validator: (v) {
                                 return v!.trim().length % 2 == 0
                                     ? null
@@ -110,7 +110,7 @@ class _NDEFRecordSetting extends State<NDEFRecordSetting> {
                               controller: _identifierController,
                             ),
                             TextFormField(
-                              decoration: InputDecoration(labelText: 'type'),
+                              decoration: const InputDecoration(labelText: 'type'),
                               validator: (v) {
                                 return v!.trim().length % 2 == 0
                                     ? null
@@ -119,7 +119,7 @@ class _NDEFRecordSetting extends State<NDEFRecordSetting> {
                               controller: _typeController,
                             ),
                             TextFormField(
-                              decoration: InputDecoration(labelText: 'payload'),
+                              decoration: const InputDecoration(labelText: 'payload'),
                               validator: (v) {
                                 return v!.trim().length % 2 == 0
                                     ? null
@@ -128,7 +128,7 @@ class _NDEFRecordSetting extends State<NDEFRecordSetting> {
                               controller: _payloadController,
                             ),
                             ElevatedButton(
-                              child: Text('OK'),
+                              child: const Text('OK'),
                               onPressed: () {
                                 if ((_formKey.currentState as FormState)
                                     .validate()) {
@@ -147,7 +147,7 @@ class _NDEFRecordSetting extends State<NDEFRecordSetting> {
                               },
                             ),
                             ElevatedButton(
-                              child: Text('Delete'),
+                              child: const Text('Delete'),
                               onPressed: () {
                                 if ((_formKey.currentState as FormState)
                                     .validate()) {
