@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
 
 void main() {
   runApp(const MyApp());
@@ -41,27 +42,58 @@ class _BiometricPageState extends State<BiometricPage> {
       _statusMessage = "Initiating authentication...";
     });
 
-    var headers = {
-      'x-api-key': 'nyYqjcdsP41jrEMpL3W7z2JzV6FRCxhmahXjY3tZ', // Replace 'iVALT_TOKEN' with your actual API key
-      'Content-Type': 'application/json',
-    };
+    Timer? timer;
+    const Duration pollInterval = Duration(seconds: 5); // Adjust the interval as needed
 
-    var response = await http.post(
-      Uri.parse('https://api.ivalt.com/biometric-auth-request'),
-      headers: headers,
-      body: json.encode({"mobile": mobileNumber}),
-    );
-
-    if (response.statusCode == 200) { // replace with response.statusCode == 200
-      setState(() {
-        Navigator.of(context).pushNamed('/nfc');
-        _statusMessage = "Authentication initiated, check your device.";
-      });
-    } else {
-      setState(() {
-        _statusMessage = "Failed to initiate authentication: ${response.body}";
-      });
+    void stopPolling() {
+      if (timer != null) {
+        timer!.cancel();
+      }
     }
+
+    var headers = {
+        'x-api-key': 'nyYqjcdsP41jrEMpL3W7z2JzV6FRCxhmahXjY3tZ',
+        'Content-Type': 'application/json',
+      };
+
+    void pollServer(Timer timer) async {
+  
+
+      var response = await http.post(
+        Uri.parse('https://api.ivalt.com/biometric-auth-result'),
+        headers: headers,
+        body: json.encode({"mobile": mobileNumber}),
+      );
+
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        // Authentication initiated, update UI accordingly
+        setState(() {
+          Navigator.of(context).pushNamed('/nfc');
+          _statusMessage = "Authentication initiated, check your device.";
+          stopPolling();
+        });
+      } else {
+        // Authentication failed or other error occurred
+        setState(() {
+          _statusMessage = "Failed to initiate authentication: ${response.body}";
+        });
+        // stopPolling(); // Stop polling on error
+      }
+    } 
+
+    http.post(
+        Uri.parse('https://api.ivalt.com/biometric-auth-request'),
+        headers: headers,
+        body: json.encode({"mobile": mobileNumber}),
+      );
+
+    // Start polling
+    timer = Timer.periodic(pollInterval, pollServer);
+
+    // Initial poll immediately after initiating authentication
+    pollServer(timer);
   }
 
   @override

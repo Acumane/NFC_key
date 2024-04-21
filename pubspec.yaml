@@ -40,7 +40,7 @@ dependencies:
   ndef: ^0.3.3
 
   
-  http: ^0.13.3
+  http: ^1.2.1
 
 dev_dependencies:
   flutter_test:
