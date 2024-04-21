@@ -12,7 +12,7 @@ class NDEFUriRecordSetting extends StatefulWidget {
 }
 
 class _NDEFUriRecordSetting extends State<NDEFUriRecordSetting> {
-  GlobalKey _formKey = new GlobalKey<FormState>();
+  final GlobalKey _formKey = new GlobalKey<FormState>();
   late TextEditingController _contentController;
   String? _dropButtonValue;
 
@@ -30,7 +30,7 @@ class _NDEFUriRecordSetting extends State<NDEFUriRecordSetting> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: Text('Set Record'),
+              title: const Text('Set Record'),
             ),
             body: Center(
                 child: Padding(
@@ -54,11 +54,11 @@ class _NDEFUriRecordSetting extends State<NDEFUriRecordSetting> {
                               },
                             ),
                             TextFormField(
-                              decoration: InputDecoration(labelText: 'content'),
+                              decoration: const InputDecoration(labelText: 'content'),
                               controller: _contentController,
                             ),
                             ElevatedButton(
-                              child: Text('OK'),
+                              child: const Text('OK'),
                               onPressed: () {
                                 if ((_formKey.currentState as FormState)
                                     .validate()) {

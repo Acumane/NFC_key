@@ -39,6 +39,9 @@ dependencies:
   nfc_manager: ^3.4.0
   ndef: ^0.3.3
 
+  
+  http: ^0.13.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -17,22 +17,22 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Biometric Authentication Home'),
+      home: const BiometricPage(title: 'Biometric Authentication Home'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class BiometricPage extends StatefulWidget {
+  const BiometricPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<BiometricPage> createState() => _BiometricPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _BiometricPageState extends State<BiometricPage> {
+  final int _counter = 0;
   final TextEditingController _mobileNumberController = TextEditingController();
   String _statusMessage = '';
 
@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     var headers = {
-      'x-api-key': 'iVALT_TOKEN', // Replace 'iVALT_TOKEN' with your actual API key
+      'x-api-key': 'nyYqjcdsP41jrEMpL3W7z2JzV6FRCxhmahXjY3tZ', // Replace 'iVALT_TOKEN' with your actual API key
       'Content-Type': 'application/json',
     };
 
@@ -52,8 +52,9 @@ class _MyHomePageState extends State<MyHomePage> {
       body: json.encode({"mobile": mobileNumber}),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200) { // replace with response.statusCode == 200
       setState(() {
+        Navigator.of(context).pushNamed('/nfc');
         _statusMessage = "Authentication initiated, check your device.";
       });
     } else {
@@ -74,18 +75,22 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextField(
-              controller: _mobileNumberController,
-              decoration: InputDecoration(
-                labelText: "Enter your mobile number",
-                border: OutlineInputBorder(),
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.clear),
-                  onPressed: () => _mobileNumberController.clear(),
+            SizedBox(
+              width: 300,
+              child: TextField(
+                controller: _mobileNumberController,
+                decoration: InputDecoration(
+                  labelText: "Enter your mobile number",
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () => _mobileNumberController.clear(),
+                  ),
                 ),
-              ),
               keyboardType: TextInputType.phone,
+              ),
             ),
+            
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -102,25 +107,11 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 20),
             Text(_statusMessage),
             const SizedBox(height: 20),
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _counter++;
-          });
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      
     );
   }
 }

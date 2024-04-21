@@ -12,7 +12,7 @@ class NDEFTextRecordSetting extends StatefulWidget {
 }
 
 class _NDEFTextRecordSetting extends State<NDEFTextRecordSetting> {
-  GlobalKey _formKey = new GlobalKey<FormState>();
+  final GlobalKey _formKey = new GlobalKey<FormState>();
   late TextEditingController _languageController;
   late TextEditingController _textController;
   late int _dropButtonValue;
@@ -33,7 +33,7 @@ class _NDEFTextRecordSetting extends State<NDEFTextRecordSetting> {
     return MaterialApp(
         home: Scaffold(
             appBar: AppBar(
-              title: Text('Set Record'),
+              title: const Text('Set Record'),
             ),
             body: Center(
                 child: Padding(
@@ -47,9 +47,9 @@ class _NDEFTextRecordSetting extends State<NDEFTextRecordSetting> {
                             DropdownButton(
                               value: _dropButtonValue,
                               items: [
-                                DropdownMenuItem(
+                                const DropdownMenuItem(
                                     child: Text('UTF-8'), value: 0),
-                                DropdownMenuItem(
+                                const DropdownMenuItem(
                                     child: Text('UTF-16'), value: 1),
                               ],
                               onChanged: (value) {
@@ -60,7 +60,7 @@ class _NDEFTextRecordSetting extends State<NDEFTextRecordSetting> {
                             ),
                             TextFormField(
                               decoration:
-                                  InputDecoration(labelText: 'language'),
+                                  const InputDecoration(labelText: 'language'),
                               validator: (v) {
                                 return v!.trim().length % 2 == 0
                                     ? null
@@ -69,11 +69,11 @@ class _NDEFTextRecordSetting extends State<NDEFTextRecordSetting> {
                               controller: _languageController,
                             ),
                             TextFormField(
-                              decoration: InputDecoration(labelText: 'text'),
+                              decoration: const InputDecoration(labelText: 'text'),
                               controller: _textController,
                             ),
                             ElevatedButton(
-                              child: Text('OK'),
+                              child: const Text('OK'),
                               onPressed: () {
                                 if ((_formKey.currentState as FormState)
                                     .validate()) {
