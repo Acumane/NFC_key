@@ -39,42 +39,42 @@ class _BiometricPageState extends State<BiometricPage> {
 
   Future<void> initiateBiometricAuth(String mobileNumber) async {
     showSnackbar("Initiating authentication...");
-    Timer? timer;
     const Duration pollInterval = Duration(seconds: 2); // Adjust the interval as needed
-
-    void stopPolling() {
-      timer?.cancel();
-    }
 
     var headers = {
       'x-api-key': 'nyYqjcdsP41jrEMpL3W7z2JzV6FRCxhmahXjY3tZ',
       'Content-Type': 'application/json',
     };
 
-    void pollServer(Timer timer) async {
-      var response = await http.post(
-        Uri.parse('https://api.ivalt.com/biometric-auth-result'),
-        headers: headers,
-        body: json.encode({"mobile": mobileNumber}),
-      );
-
-      if (response.statusCode == 200) {
-        Navigator.of(context).pushNamed('/nfc');
-        showSnackbar("Authentication initiated, check your device.");
-        stopPolling();
-      } else {
-        showSnackbar("Authentication initiated, check your device.");
-      }
-    } 
-
-    http.post(
+    // Make the initial authentication request
+    var authRequestResponse = await http.post(
       Uri.parse('https://api.ivalt.com/biometric-auth-request'),
       headers: headers,
       body: json.encode({"mobile": mobileNumber}),
     );
 
-    timer = Timer.periodic(pollInterval, pollServer);
-    pollServer(timer);
+    if (authRequestResponse.statusCode != 200) {
+      // If the initial request fails, show error message and return
+      showSnackbar("Failed to initiate authentication");
+      return;
+    }
+
+    // Start polling for authentication result
+    Timer.periodic(pollInterval, (timer) async {
+      var authResultResponse = await http.post(
+        Uri.parse('https://api.ivalt.com/biometric-auth-result'),
+        headers: headers,
+        body: json.encode({"mobile": mobileNumber}),
+      );
+
+      print(authResultResponse.body);
+
+      if (authResultResponse.statusCode == 200) {
+        Navigator.of(context).pushNamed('/nfc');
+        showSnackbar("Authentication initiated, check your device.");
+        timer.cancel(); // Stop polling
+      }
+    });
   }
 
   void showSnackbar(String message) {
